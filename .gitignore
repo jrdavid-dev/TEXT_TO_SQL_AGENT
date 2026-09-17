@@ -2,3 +2,4 @@ docs/*.parquet
 docs/*.json 
 clean/*.parquet  
 clean/*.json 
+.env

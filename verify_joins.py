@@ -7,7 +7,7 @@ from data_preprocessing import (
     load_area_of_deliveries,
     load_business_categories,
     load_dpwh_transparency_data,
-    load_flood_control,
+    load_clean_flood_control,
 )
 
 
@@ -159,9 +159,7 @@ def main():
     df_area_of_deliveries = load_area_of_deliveries("clean")
     df_business_categories = load_business_categories("clean")
     df_dpwh_transparency_data = load_dpwh_transparency_data("clean")
-    
-    path = os.path.join("clean", "flood_control.parquet")
-    df_flood_control = pd.read_parquet(path)
+    df_flood_control = load_clean_flood_control("clean")
 
     # PhilGEPS fact table <-> its 4 dimension tables (should be ~exact)
     check_match_rate(df_philgeps, "awardee_name", df_awardees, "awardee_name", "awardee_name")

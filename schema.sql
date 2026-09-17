@@ -7,7 +7,7 @@ CREATE TABLE awardees (
     id UUID PRIMARY KEY,
     awardee_name TEXT UNIQUE,
     count INTEGER,
-    total NUMERIC(15, 2),
+    total NUMERIC(18, 2),
     start_date DATE,
     end_date DATE
 );
@@ -16,7 +16,7 @@ CREATE TABLE organizations (
     id UUID PRIMARY KEY,
     organization_name TEXT UNIQUE,
     count INTEGER,
-    total NUMERIC(15, 2),
+    total NUMERIC(18, 2),
     start_date DATE,
     end_date DATE
 );
@@ -25,7 +25,7 @@ CREATE TABLE area_of_deliveries (
     id UUID PRIMARY KEY,
     area_of_delivery TEXT UNIQUE,
     count INTEGER,
-    total NUMERIC(15, 2),
+    total NUMERIC(18, 2),
     start_date DATE,
     end_date DATE
 );
@@ -34,7 +34,7 @@ CREATE TABLE business_categories (
     id UUID PRIMARY KEY,
     business_category TEXT UNIQUE,
     count INTEGER,
-    total NUMERIC(15, 2),
+    total NUMERIC(18, 2),
     start_date DATE,
     end_date DATE
 );
@@ -53,7 +53,7 @@ CREATE TABLE philgeps (
     organization_name TEXT REFERENCES organizations(organization_name),
     area_of_delivery TEXT REFERENCES area_of_deliveries(area_of_delivery),
     business_category TEXT REFERENCES business_categories(business_category),
-    contract_amount NUMERIC(15, 2),
+    contract_amount numeric(18, 2),
     award_date DATE,
     award_status TEXT
 );
@@ -67,8 +67,8 @@ CREATE TABLE dpwh_transparency_data (
     description TEXT,
     category TEXT,
     status TEXT,
-    budget NUMERIC(15, 2),
-    amount_paid NUMERIC(15, 2),
+    budget numeric(18, 2),
+    amount_paid numeric(18, 2),
     progress NUMERIC(5, 2),
     contractor TEXT,
     start_date DATE,
@@ -85,7 +85,7 @@ CREATE TABLE dpwh_transparency_data (
     report_count INTEGER,
     has_satellite_image BOOLEAN,
     province TEXT,
-    region TEXTh
+    region TEXT
 );
 
 CREATE TABLE component_category_table (
@@ -118,8 +118,8 @@ CREATE TABLE flood_control (
     longitude DOUBLE PRECISION,
     latitude DOUBLE PRECISION,
     contract_id TEXT,
-    abc NUMERIC(15, 2),
-    contract_cost NUMERIC(15, 2),
+    abc numeric(18, 2),
+    contract_cost numeric(18, 2),
     completion_date_original DATE,
     completion_year INTEGER,
     contractor TEXT,

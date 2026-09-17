@@ -66,6 +66,27 @@ def uuid_bytes_to_str(series:  pd.Series) -> pd.Series:
 def normalize_text(series: pd.Series) -> pd.Series:
     return series.astype("string").str.strip().str.lower()
 
+def find_duplicate_names(df: pd.DataFrame, name_col: str) -> pd.DataFrame:
+        """Return name values that appear on more than one row."""
+        counts = df[name_col].value_counts()
+        dupes = counts[counts > 1]
+        return df[df[name_col].isin(dupes.index)].sort_values(name_col)
+
+def merge_duplicate_names(dataframe: pd.DataFrame, name_column: str) -> pd.DataFrame:
+    """Collapse duplicate name rows into one, summing counts/totals and spanning dates."""
+    merged = (
+        dataframe
+        .groupby(name_column, as_index=False)
+        .agg(
+            count=("count", "sum"),
+            total=("total", "sum"),
+            start_date=("start_date", "min"),
+            end_date=("end_date", "max"),
+        )
+    )
+    merged["id"] = [str(uuid.uuid4()) for _ in range(len(merged))]
+    return merged
+
 
 # LOAD FUNCTIONS
 def load_area_of_deliveries(docs_dir: str = DOCS_DIR) -> pd.DataFrame:
@@ -112,6 +133,15 @@ def load_flood_control(docs_dir: str = DOCS_DIR) -> pd.DataFrame:
     records = [f["attributes"] for f in data["features"]]
     return pd.DataFrame(records)
 
+def load_clean_flood_control(clean_dir: str = CLEAN_DIR) -> pd.DataFrame:
+    """Read the cleaned flood control parquet file into a DataFrame."""
+    path = os.path.join(clean_dir, "flood_control.parquet")
+    return pd.read_parquet(path)
+
+def load_component_category_table(clean_dir: str = CLEAN_DIR) -> pd.DataFrame:
+    """Read the cleaned component category junction table parquet file into a DataFrame."""
+    path = os.path.join(clean_dir, "component_category_table.parquet")
+    return pd.read_parquet(path)
 
 
 #CLEANER FUNCTIONS
@@ -139,7 +169,9 @@ def clean_awardees(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 def clean_organizations(dataframe: pd.DataFrame) -> pd.DataFrame:
     """Clean the organizations dimension table."""
-    return clean_dimension_table(dataframe, name_column="organization_name")
+    dataframe = clean_dimension_table(dataframe, name_column="organization_name")
+    dataframe = merge_duplicate_names(dataframe, name_column="organization_name")
+    return dataframe
 
 def clean_business_categories(dataframe: pd.DataFrame) -> pd.DataFrame:
     """Clean the business_categories dimension table."""
@@ -230,7 +262,7 @@ def build_component_category_table(dataframe: pd.DataFrame) -> pd.DataFrame:
         .str.strip()
         .str.lower()
     )
-
+    table = table.dropna()
     return table.rename(
         columns={"component_categories": "component_category"}
     )
@@ -323,6 +355,7 @@ def save_dataframe(dataframe: pd.DataFrame, filename: str, clean_dir: str = CLEA
 
 
 def main():
+#    """
     df_area_of_deliveries = clean_area_of_deliveries(load_area_of_deliveries())
     print("AREA OF DELIVERIES")
     df_area_of_deliveries.info()
@@ -347,7 +380,8 @@ def main():
     print("PHILGEPS")
     df_philgeps.info()
     print(df_philgeps.iloc[0])
-
+    
+    
     df_dpwh_transparency_data = clean_dpwh_transparency_data(load_dpwh_transparency_data())
     component_category_table = build_component_category_table(df_dpwh_transparency_data)
     df_dpwh_transparency_data = drop_component_categories(df_dpwh_transparency_data)
@@ -357,12 +391,12 @@ def main():
     print("COMPONENT CATEGORY TABLE")
     component_category_table.info()
     print(component_category_table.iloc[0])
-
+    
     df_flood_control = clean_flood_control(load_flood_control())
     print("FLOOD CONTROL")
     df_flood_control.info()
     print(df_flood_control.iloc[0])
-    """
+    
     save_dataframe(df_area_of_deliveries, "area_of_deliveries.parquet")
     save_dataframe(df_awardees, "awardees.parquet")
     save_dataframe(df_business_categories, "business_categories.parquet")
@@ -371,7 +405,10 @@ def main():
     save_dataframe(df_dpwh_transparency_data, "dpwh_transparency_data.parquet")
     save_dataframe(component_category_table, "component_category_table.parquet")
     save_dataframe(df_flood_control, "flood_control.parquet")
-    """
+    save_dataframe(component_category_table, "component_category_table.parquet")
+#   """
+    
+
 
 if __name__ == "__main__":
     main()
