@@ -362,7 +362,7 @@ def main():
     print("FLOOD CONTROL")
     df_flood_control.info()
     print(df_flood_control.iloc[0])
-
+    """
     save_dataframe(df_area_of_deliveries, "area_of_deliveries.parquet")
     save_dataframe(df_awardees, "awardees.parquet")
     save_dataframe(df_business_categories, "business_categories.parquet")
@@ -371,7 +371,7 @@ def main():
     save_dataframe(df_dpwh_transparency_data, "dpwh_transparency_data.parquet")
     save_dataframe(component_category_table, "component_category_table.parquet")
     save_dataframe(df_flood_control, "flood_control.parquet")
-
+    """
 
 if __name__ == "__main__":
     main()
