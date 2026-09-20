@@ -3,7 +3,7 @@
 -- (created first since philgeps will reference these)
 -- =========================================
 
-CREATE TABLE awardees (
+CREATE TABLE IF NOT EXISTS awardees (
     id UUID PRIMARY KEY,
     awardee_name TEXT UNIQUE,
     count INTEGER,
@@ -12,7 +12,7 @@ CREATE TABLE awardees (
     end_date DATE
 );
 
-CREATE TABLE organizations (
+CREATE TABLE IF NOT EXISTS organizations (
     id UUID PRIMARY KEY,
     organization_name TEXT UNIQUE,
     count INTEGER,
@@ -21,7 +21,7 @@ CREATE TABLE organizations (
     end_date DATE
 );
 
-CREATE TABLE area_of_deliveries (
+CREATE TABLE IF NOT EXISTS area_of_deliveries (
     id UUID PRIMARY KEY,
     area_of_delivery TEXT UNIQUE,
     count INTEGER,
@@ -30,7 +30,7 @@ CREATE TABLE area_of_deliveries (
     end_date DATE
 );
 
-CREATE TABLE business_categories (
+CREATE TABLE IF NOT EXISTS business_categories (
     id UUID PRIMARY KEY,
     business_category TEXT UNIQUE,
     count INTEGER,
@@ -43,7 +43,7 @@ CREATE TABLE business_categories (
 -- PhilGEPS fact table
 -- =========================================
 
-CREATE TABLE philgeps (
+CREATE TABLE IF NOT EXISTS philgeps (
     id UUID PRIMARY KEY,
     reference_id TEXT,
     contract_no TEXT,
@@ -62,7 +62,7 @@ CREATE TABLE philgeps (
 -- DPWH TRANSPARENCY
 -- =========================================
 
-CREATE TABLE dpwh_transparency_data (
+CREATE TABLE IF NOT EXISTS dpwh_transparency_data (
     contract_id TEXT PRIMARY KEY,
     description TEXT,
     category TEXT,
@@ -88,7 +88,7 @@ CREATE TABLE dpwh_transparency_data (
     region TEXT
 );
 
-CREATE TABLE component_category_table (
+CREATE TABLE IF NOT EXISTS component_category_table (
     contract_id TEXT,
     component_category TEXT,
     PRIMARY KEY (contract_id, component_category),
@@ -100,7 +100,7 @@ CREATE TABLE component_category_table (
 -- Flood control
 -- =========================================
 
-CREATE TABLE flood_control (
+CREATE TABLE IF NOT EXISTS flood_control (
     global_id UUID PRIMARY KEY,
     object_id TEXT,
     infra_year INTEGER,
