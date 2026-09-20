@@ -1,0 +1,10 @@
+-- Q16: What percentage of is_live = true contracts have no livestream_detected_at
+-- value (claimed live but never verified)?
+-- Q17: Which contractors have the highest number of contracts with
+-- has_satellite_image = false (least independently verifiable)?
+-- Q18: How many DPWH contracts have report_count = 0 (never publicly
+-- reported/monitored at all)?
+-- Q19: Which contractors have the largest gap between total budget and total
+-- amount_paid (money committed vs. actually disbursed)?
+-- Q20: Of contracts still 'ongoing' and past their completion_date, what
+-- percentage have zero report_count (delayed and unmonitored)?
