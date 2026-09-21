@@ -33,18 +33,45 @@ LIMIT 10;
 
 -- Q13: Which contracts are marked status = 'completed' but have progress < 100%
 -- (data-integrity / reporting red flag)?
-SELECT  contractor,
-        COUNT(*) FILTER (WHERE status = 'completed' AND progress < 100) AS wrong_status_count,
-        COUNT(*) AS total_contracts
+SELECT  contract_id, 
+        description, 
+        category, 
+        contractor, 
+        progress, 
+        status, 
+        start_date, 
+        completion_date, 
+        budget, 
+        amount_paid
 FROM dpwh_transparency_data
-GROUP BY contractor
-HAVING COUNT(*) > 100
-ORDER BY wrong_status_count DESC
-LIMIT 10;
+WHERE status = 'completed' AND progress < 100;
 
 -- Q14: Which contractors have the most contracts where amount_paid exceeds budget
 -- (potential overpayment)?
+SELECT  contractor, 
+        COUNT(*) AS overpaid_contracts,
+        SUM(amount_paid - budget) AS total_overpayment
+FROM dpwh_transparency_data
+WHERE amount_paid >= budget
+GROUP BY contractor
+ORDER BY COUNT(*) DESC
+LIMIT 10;
 
 
 -- Q15: What's the average overdue duration (today - completion_date) for still
 -- incomplete contracts, grouped by contractor, for the top 10 by budget?
+WITH top_10_contractor AS (
+    SELECT  contractor
+    FROM dpwh_transparency_data
+    GROUP BY contractor
+    ORDER BY SUM(budget) DESC
+    LIMIT 10
+)
+SELECT  top_10_contractor.*, 
+        ROUND(AVG(CURRENT_DATE - completion_date), 0) AS avg_days_overdue,
+        COUNT(*) AS number_of_contract_delays
+FROM dpwh_transparency_data
+INNER JOIN top_10_contractor ON dpwh_transparency_data.contractor = top_10_contractor.contractor
+WHERE completion_date < CURRENT_DATE AND progress < 100
+GROUP BY top_10_contractor.contractor
+ORDER BY avg_days_overdue DESC;
