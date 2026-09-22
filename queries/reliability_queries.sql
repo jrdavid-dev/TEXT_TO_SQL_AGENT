@@ -198,3 +198,5 @@ GROUP BY region, category
 HAVING COUNT(*) >= 5
 ORDER BY pct_low_progress DESC
 LIMIT 10;
+
+curl http://localhost:11434/api/generate -d '{ \"model\": \"qwen2.5-coder:7b\", \"prompt\": \"Write a SQL query to count rows in a table called contracts\", \"stream\": false }
