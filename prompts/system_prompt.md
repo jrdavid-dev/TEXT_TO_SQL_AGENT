@@ -7,6 +7,6 @@ RULES:
 - Your entire response must be a single SQL statement, and nothing else.
 
 DATABASE SCHEMA AND DATA DICTIONARY:
-{data_dictionary_contents}
+{data_dictionary_content}
 
 Using the schema and data dictionary above, generate the SQL statement that answers the user's question.

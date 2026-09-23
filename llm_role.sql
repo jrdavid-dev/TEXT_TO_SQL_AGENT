@@ -1,0 +1,7 @@
+CREATE ROLE llm_viewer WITH LOGIN PASSWORD 'Pogiako1904';
+
+GRANT CONNECT ON DATABASE dpwh TO llm_viewer;
+
+GRANT USAGE ON SCHEMA public TO llm_viewer;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO llm_viewer;
